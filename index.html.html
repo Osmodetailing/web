@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSMO Detailing — Luxury Car Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0c;
+    --dark: #111116;
+    --card: #16161d;
+    --teal: #00c4b4;
+    --teal-dim: #00c4b420;
+    --teal-glow: #00c4b440;
+    --white: #f0f0f4;
+    --muted: #6b6b7a;
+    --border: #1e1e28;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: linear-gradient(to bottom, rgba(10,10,12,0.95), transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none;
+  }
+
+  .logo-ring {
+    width: 38px; height: 38px;
+    border: 2.5px solid var(--teal);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 12px var(--teal-glow);
+  }
+
+  .logo-ring::after {
+    content: '';
+    position: absolute; inset: 6px;
+    border: 1.5px solid var(--teal);
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--white);
+  }
+
+  .nav-links {
+    display: flex; gap: 40px; list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--teal); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    padding: 10px 24px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .nav-cta:hover {
+    background: var(--teal);
+    color: var(--black);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0 60px;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,196,180,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(0,196,180,0.04) 0%, transparent 60%),
+      linear-gradient(135deg, #0a0a0c 0%, #0f1018 100%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.03;
+    background-image:
+      linear-gradient(var(--teal) 1px, transparent 1px),
+      linear-gradient(90deg, var(--teal) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 680px;
+  }
+
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .hero-eyebrow span {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .eyebrow-line {
+    width: 40px; height: 1px;
+    background: var(--teal);
+    opacity: 0.6;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 130px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+
+  .hero h1 .accent { color: var(--teal); }
+
+  .hero-sub {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 440px;
+    margin-bottom: 48px;
+  }
+
+  .hero-actions {
+    display: flex; gap: 16px; align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--teal);
+    color: var(--black);
+    border: none;
+    padding: 16px 36px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover { background: #00e0ce; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    border: none;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; gap: 8px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .btn-ghost:hover { opacity: 1; }
+
+  .hero-stats {
+    position: absolute; right: 60px; bottom: 80px;
+    display: flex; gap: 48px;
+    z-index: 2;
+  }
+
+  .stat-item { text-align: right; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--teal);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* TICKER */
+  .ticker {
+    background: var(--teal);
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .ticker-inner {
+    display: inline-flex;
+    animation: ticker 20s linear infinite;
+  }
+
+  .ticker-item {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--black);
+    font-weight: 600;
+    padding: 0 32px;
+  }
+
+  .ticker-dot {
+    color: rgba(0,0,0,0.3);
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 100px 60px;
+  }
+
+  .section-eyebrow {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .section-eyebrow span {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 5vw, 68px);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 480px;
+  }
+
+  /* SERVICES */
+  .services { background: var(--dark); }
+
+  .services-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .service-card {
+    background: var(--card);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .service-card:hover { background: #1a1a24; }
+
+  .service-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 24px;
+    transition: color 0.3s;
+  }
+
+  .service-card:hover .service-num { color: var(--teal-dim); }
+
+  .service-icon {
+    width: 48px; height: 48px;
+    margin-bottom: 20px;
+    color: var(--teal);
+  }
+
+  .service-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .service-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .service-price {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  /* PROCESS */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 60px;
+    position: relative;
+  }
+
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 24px; left: 12.5%; right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--teal), var(--teal-dim), var(--teal));
+    opacity: 0.3;
+  }
+
+  .process-step {
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  .step-dot {
+    width: 48px; height: 48px;
+    border: 1px solid var(--teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--teal);
+    background: var(--black);
+    position: relative; z-index: 1;
+  }
+
+  .step-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .step-desc {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* BEFORE/AFTER */
+  .ba-section { background: var(--dark); }
+
+  .ba-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 60px;
+    background: var(--teal-dim);
+  }
+
+  .ba-item {
+    background: var(--card);
+    padding: 40px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  .ba-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .ba-car {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+
+  .ba-service {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .ba-img-placeholder {
+    width: 100%; height: 180px;
+    background: linear-gradient(135deg, var(--border), #1a1a24);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ba-img-placeholder::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 40%, var(--teal-dim));
+  }
+
+  .ba-img-text {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    z-index: 1;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 60px;
+  }
+
+  .testimonial {
+    border: 1px solid var(--border);
+    padding: 36px;
+    position: relative;
+  }
+
+  .testimonial::before {
+    content: '"';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: var(--teal);
+    opacity: 0.2;
+    position: absolute;
+    top: 16px; left: 24px;
+    line-height: 1;
+  }
+
+  .testimonial-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #a0a0b0;
+    margin-bottom: 24px;
+    padding-top: 32px;
+  }
+
+  .testimonial-author {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .testimonial-car {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    background: var(--dark);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 50% 80% at 50% 50%, var(--teal-dim), transparent);
+  }
+
+  .cta-section * { position: relative; z-index: 1; }
+
+  .cta-section .section-title { font-size: clamp(52px, 7vw, 96px); }
+
+  .cta-actions {
+    display: flex; gap: 16px; justify-content: center;
+    margin-top: 40px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 48px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .footer-links {
+    display: flex; gap: 32px;
+  }
+
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--teal); }
+
+  /* GLOW LINE */
+  .glow-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    opacity: 0.3;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .hero { padding: 0 24px; }
+    .hero h1 { font-size: 64px; }
+    .hero-stats { right: 24px; bottom: 40px; gap: 24px; }
+    .stat-num { font-size: 28px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .process-steps::before { display: none; }
+    .ba-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .services-header { flex-direction: column; gap: 20px; align-items: flex-start; }
+    footer { flex-direction: column; gap: 24px; text-align: center; }
+    .cta-actions { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22" cy="22" r="19" stroke="#00c4b4" stroke-width="5.5" fill="none"/>
+    </svg>
+    <span class="logo-text">OSMO DETAILING</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#sluzby">Služby</a></li>
+    <li><a href="#proces">Proces</a></li>
+    <li><a href="#reference">Reference</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+  <button class="nav-cta">Rezervovat</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span>Profesionální péče o vozidla</span>
+    </div>
+    <h1>
+      YOUR CAR.<br>
+      <span class="accent">REBORN.</span>
+    </h1>
+    <p class="hero-sub">
+      Prémiový detailing a keramické ochrany pro vozy, kterým záleží na dokonalosti. Každý detail zpracován s precizností.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('kontakt').scrollIntoView({behavior:'smooth'})">Objednat se</button>
+      <button class="btn-ghost" onclick="document.getElementById('sluzby').scrollIntoView({behavior:'smooth'})">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M6 8h4M8 6l2 2-2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Naše služby
+      </button>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">1500+</div>
+      <div class="stat-label">Vozidel</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Keramická ochrana <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Paint Correction <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Paint Protection Film <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Interior Detailing <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Nano ochrana <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Leštění laku <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Keramická ochrana <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Paint Correction <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Paint Protection Film <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Interior Detailing <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Nano ochrana <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Leštění laku <span class="ticker-dot">◆</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="sluzby">
+  <div class="services-header">
+    <div>
+      <div class="section-eyebrow"><div class="eyebrow-line"></div><span>Co nabízíme</span></div>
+      <h2 class="section-title">NAŠE<br>SLUŽBY</h2>
+    </div>
+    <p class="section-sub">Každá služba je prováděna s maximální precizností a prémiovými produkty.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 36L16 20L24 28L32 16L40 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        <circle cx="24" cy="28" r="2" fill="currentColor"/>
+        <circle cx="32" cy="16" r="2" fill="currentColor"/>
+      </svg>
+      <div class="service-name">Paint Correction</div>
+      <p class="service-desc">Odstranění škrábanců, hologramů a defektů laku. Jednostupňová až třístupňová korekce pro dokonalý výsledek.</p>
+      <div class="service-price">Od 5 000 Kč</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="24" cy="24" r="12" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <circle cx="24" cy="24" r="4" fill="currentColor"/>
+      </svg>
+      <div class="service-name">Keramická ochrana</div>
+      <p class="service-desc">Nejpokročilejší ochrana laku s trvanlivostí až 5 let. Hydrofobní efekt, odolnost vůči UV záření a chemikáliím.</p>
+      <div class="service-price">Od 12 000 Kč</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 12h20l4 8H10l4-8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8 20h32v10a2 2 0 01-2 2H10a2 2 0 01-2-2V20z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M20 32v4M28 32v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M16 26h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="service-name">Příprava na prodej</div>
+      <p class="service-desc">Kompletní příprava vozidla pro maximální prodejní hodnotu — korekce laku, čištění interiéru a finální prezentace.</p>
+      <div class="service-price">Od 5 000 Kč</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 38V20l12-10 12 10v18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="18" y="28" width="12" height="10" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M22 24h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="service-name">Interior Detailing</div>
+      <p class="service-desc">Hloubkové čištění interiéru, renovace kůže, odstranění pachů a dezinfekce ozónem.</p>
+      <div class="service-price">Od 3 500 Kč</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 8C15.2 8 8 15.2 8 24s7.2 16 16 16 16-7.2 16-16S32.8 8 24 8z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M24 14v10l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="service-name">Kompletní detailing</div>
+      <p class="service-desc">Komplexní péče o vozidlo — exteriér i interiér. Ideální před prodejem nebo jako dárek pro milovníky aut.</p>
+      <div class="service-price">Od 12 000 Kč</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 28l4-8h20l4 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M8 28h32v6a2 2 0 01-2 2H10a2 2 0 01-2-2v-6z" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="16" cy="38" r="3" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="32" cy="38" r="3" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <div class="service-name">Nano ochrana skel</div>
+      <p class="service-desc">Hydrofobní nano vrstva na skla pro maximální výhled za deště. Trvanlivost 12–18 měsíců.</p>
+      <div class="service-price">Od 2 000 Kč</div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- PROCESS -->
+<section id="proces">
+  <div class="section-eyebrow"><div class="eyebrow-line"></div><span>Jak pracujeme</span></div>
+  <h2 class="section-title">PROCES</h2>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-dot">1</div>
+      <div class="step-title">Konzultace</div>
+      <p class="step-desc">Bezplatné posouzení stavu vozidla a doporučení optimálního řešení.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot">2</div>
+      <div class="step-title">Příprava</div>
+      <p class="step-desc">Hloubkové čištění a dekontaminace laku jako základ pro dokonalý výsledek.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot">3</div>
+      <div class="step-title">Aplikace</div>
+      <p class="step-desc">Precizní nanášení ochran nebo korekce laku v kontrolovaném prostředí.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot">4</div>
+      <div class="step-title">Předání</div>
+      <p class="step-desc">Finální kontrola kvality a předání s instrukcemi o péči o vozidlo.</p>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- TESTIMONIALS -->
+<section class="ba-section" id="reference">
+  <div class="section-eyebrow"><div class="eyebrow-line"></div><span>Co říkají zákazníci</span></div>
+  <h2 class="section-title">REFERENCE</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <p class="testimonial-text">Keramická ochrana na mém Porsche 911 je naprosto dokonalá. Auto vypadá líp než z výstavy a péče o lak je o 90 % jednodušší.</p>
+      <div class="testimonial-author">Martin K.</div>
+      <div class="testimonial-car">Porsche 911 GT3 — Keramická ochrana</div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-text">Paint correction na mém M4 byl zázrak. Víry v laku úplně zmizely, auto září jako nové. Profesionální přístup na 100 %.</p>
+      <div class="testimonial-author">Tomáš R.</div>
+      <div class="testimonial-car">BMW M4 — Paint Correction + Keramika</div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-text">Interiér vypadá jako nový, leather conditioning zachránil sedačky které jsem chtěl vyměnit. Ušetřil jsem desítky tisíc.</p>
+      <div class="testimonial-author">Jana M.</div>
+      <div class="testimonial-car">Mercedes GLE — Interior Detailing</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="kontakt">
+  <div class="section-eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span>Rezervace</span><div class="eyebrow-line"></div></div>
+  <h2 class="section-title">VAŠE AUTO<br><span style="color:var(--teal)">ZASLOUŽÍ</span><br>VÍC</h2>
+  <p class="section-sub" style="margin: 0 auto; text-align:center;">Kontaktujte nás a domluvte si bezplatnou konzultaci. Odpovídáme do 2 hodin.</p>
+  <div class="cta-actions">
+    <button class="btn-primary">📞 Zavolat: +420 721 773 516</button>
+    <button class="nav-cta">Napsat zprávu</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="nav-logo">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22" cy="22" r="19" stroke="#00c4b4" stroke-width="5.5" fill="none"/>
+    </svg>
+    <span class="logo-text">OSMO DETAILING</span>
+  </a>
+  <div class="footer-links">
+    <a href="#sluzby">Služby</a>
+    <a href="#proces">Proces</a>
+    <a href="#reference">Reference</a>
+    <a href="#kontakt">Kontakt</a>
+  </div>
+  <div class="footer-copy">© 2025 OSMO Detailing. Všechna práva vyhrazena.</div>
+</footer>
+
+</body>
+</html>
